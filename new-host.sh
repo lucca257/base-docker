@@ -1,14 +1,12 @@
 #!/bin/bash
 # Functions
-ok() { echo -e '\e[32m'$1'\e[m'; } # Green
-
+ok() { echo '\e[32m'$1'\e[m'; } # Green
+die() {
+    echo '\e[1;31m'$1'\e[m'
+    exit 1
+}
 # Variables
 NGINX_SITES='nginx/sites'
-WEB_DIR='/var/www'
-WEB_USER='www-data'
-USER='ali'
-NGINX_SCHEME='$scheme'
-NGINX_REQUEST_URI='$request_uri'
 COMPUTER_IP=$(hostname -I | awk '{print $1}')
 
 # Sanity check
@@ -70,3 +68,5 @@ if [ $IGNORE_HOST = false ]; then
     echo "*** Adding new host ***"
     echo "$COMPUTER_IP $PROJECT_NAME.test" >> /etc/hosts
 fi
+
+ok "PROJECT CONFIGURED !!!"
