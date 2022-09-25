@@ -5,7 +5,6 @@ services:
       build:
           context: ./php
           args:
-            - GITHUB_TOKEN=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
             - PHP_VERSION=7.4
             - INSTALL_GD=true
             - INSTALL_REDIS=false
@@ -16,6 +15,8 @@ services:
       restart: always
       volumes:
         - ~/TidyDaily:/var/www
+      depends_on:
+        - mysql
 
     workspace_php8:
       container_name: workspace_php8
@@ -33,6 +34,8 @@ services:
       restart: always
       volumes:
         - ~/TidyDaily:/var/www
+      depends_on:
+        - mysql
 
     nginx:
       container_name: nginx
@@ -47,8 +50,12 @@ services:
         - ../:/var/www
         - ./nginx/logs:/var/log/nginx
         - ./nginx/sites:/etc/nginx/sites-available
+      depends_on:
+        - workspace_php7
+        - workspace_php8
 
     mysql:
+      restart: always
       container_name: mysql
       build:
         context: ./mysql
