@@ -107,6 +107,8 @@ RUN set -eux; \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 # Setup working directory
 WORKDIR /var/www
+# Setup permissions
+RUN chmod -R 777 .
 # Enable projects as safe in git
 RUN git config --global --add safe.directory '*'
 #RUN composer config -g github-oauth.github.com ${GITHUB_TOKEN}
