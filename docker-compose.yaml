@@ -127,3 +127,13 @@ services:
       depends_on:
         - kafka
 
+    taskbird-web:
+      container_name: taskbird-web
+      image: node:12.22-alpine
+      volumes:
+        - ~/TidyDaily/taskuro-web:/var/www
+      working_dir: /var/www
+      command: sh -c "yarn && yarn start"
+      ports:
+        - "3000:3000"
+      stdin_open: true
