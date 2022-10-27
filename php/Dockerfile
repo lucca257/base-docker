@@ -104,7 +104,7 @@ RUN set -eux; \
 ###########################################################################
 # Exif:
 ###########################################################################
-ARG INSTALL_EXIF=true
+ARG INSTALL_EXIF=false
 RUN if [ ${INSTALL_EXIF} = true ]; then \
     # Enable Exif PHP extensions requirements
     docker-php-ext-install exif \

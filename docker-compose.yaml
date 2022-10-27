@@ -12,6 +12,7 @@ services:
             - INSTALL_OPCACHE=${INSTALL_OPCACHE}
             - INSTALL_MYSQL_CLIENT=${INSTALL_MYSQL_CLIENT}
             - INSTALL_ZOOKEEPER=${INSTALL_ZOOKEEPER}
+            - INSTALL_EXIF=${INSTALL_EXIF}
       restart: always
       volumes:
         - ${BASE_DIRECTORY}:/var/www
@@ -30,6 +31,7 @@ services:
           - INSTALL_OPCACHE=${INSTALL_OPCACHE}
           - INSTALL_MYSQL_CLIENT=${INSTALL_MYSQL_CLIENT}
           - INSTALL_ZOOKEEPER=${INSTALL_ZOOKEEPER}
+          - INSTALL_EXIF=${INSTALL_EXIF}
       restart: always
       volumes:
         - ${BASE_DIRECTORY}:/var/www
