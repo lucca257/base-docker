@@ -5,16 +5,16 @@ services:
       build:
           context: ./php
           args:
-            - PHP_VERSION=7.4
-            - INSTALL_GD=true
-            - INSTALL_REDIS=false
-            - INSTALL_KAFKA=true
-            - INSTALL_OPCACHE=true
-            - INSTALL_MYSQL_CLIENT=true
-            - INSTALL_ZOOKEEPER=false
+            - PHP_VERSION=${DEFAULT_PHP_VERSION}
+            - INSTALL_GD=${INSTALL_GD}
+            - INSTALL_REDIS=${INSTALL_REDIS}
+            - INSTALL_KAFKA=${INSTALL_KAFKA}
+            - INSTALL_OPCACHE=${INSTALL_OPCACHE}
+            - INSTALL_MYSQL_CLIENT=${INSTALL_MYSQL_CLIENT}
+            - INSTALL_ZOOKEEPER=${INSTALL_ZOOKEEPER}
       restart: always
       volumes:
-        - ~/TidyDaily:/var/www
+        - ${BASE_DIRECTORY}:/var/www
       depends_on:
         - mysql
 
@@ -23,17 +23,16 @@ services:
       build:
         context: ./php
         args:
-          - GITHUB_TOKEN=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
           - PHP_VERSION=8.1
-          - INSTALL_GD=true
-          - INSTALL_REDIS=false
-          - INSTALL_KAFKA=true
-          - INSTALL_OPCACHE=true
-          - INSTALL_MYSQL_CLIENT=true
-          - INSTALL_ZOOKEEPER=false
+          - INSTALL_GD=${INSTALL_GD}
+          - INSTALL_REDIS=${INSTALL_REDIS}
+          - INSTALL_KAFKA=${INSTALL_KAFKA}
+          - INSTALL_OPCACHE=${INSTALL_OPCACHE}
+          - INSTALL_MYSQL_CLIENT=${INSTALL_MYSQL_CLIENT}
+          - INSTALL_ZOOKEEPER=${INSTALL_ZOOKEEPER}
       restart: always
       volumes:
-        - ~/TidyDaily:/var/www
+        - ${BASE_DIRECTORY}:/var/www
       depends_on:
         - mysql
 
@@ -47,7 +46,7 @@ services:
         - "80:80"
         - "443:443"
       volumes:
-        - ../:/var/www
+        - ${BASE_DIRECTORY}:/var/www
         - ./nginx/logs:/var/log/nginx
         - ./nginx/sites:/etc/nginx/sites-available
       depends_on:
@@ -114,6 +113,7 @@ services:
         KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
         KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
         KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      restart: always
       depends_on:
         - zookeeper
 
@@ -124,15 +124,25 @@ services:
         - "19000:9000"
       environment:
         KAFKA_BROKERCONNECT: "kafka:29092"
+      restart: always
       depends_on:
         - kafka
 
+    mailhog:
+      container_name: mailhog
+      image: mailhog/mailhog:latest
+      logging:
+        driver: 'none'  # disable saving logs
+      ports:
+        - "1025:1025" # smtp server
+        - "8025:8025" # web ui
+
     taskbird-web:
       container_name: taskbird-web
-      image: node:12.22-alpine
+      image: node:16-alpine
       volumes:
-        - ~/TidyDaily/taskuro-web:/var/www
-      working_dir: /var/www
+        - ${BASE_DIRECTORY}:/var/www
+      working_dir: /var/www/${TASKBIRD_WEB_DIRECTORY}
       command: sh -c "yarn && yarn start"
       ports:
         - "3000:3000"

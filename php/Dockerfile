@@ -78,7 +78,6 @@ ARG INSTALL_MYSQL_CLIENT=false
 RUN if [ ${INSTALL_MYSQL_CLIENT} = true ]; then \
     docker-php-ext-install mysqli \
 ;fi
-
 ###########################################################################
 # zookeeper
 ###########################################################################
@@ -102,7 +101,14 @@ RUN set -eux; \
     docker-php-ext-enable zookeeper; \
     php -m | grep -q 'zookeeper'; \
     fi
-
+###########################################################################
+# Exif:
+###########################################################################
+ARG INSTALL_EXIF=true
+RUN if [ ${INSTALL_EXIF} = true ]; then \
+    # Enable Exif PHP extensions requirements
+    docker-php-ext-install exif \
+;fi
 # php extentions
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 # Setup working directory
