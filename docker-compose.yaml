@@ -13,6 +13,7 @@ services:
             - INSTALL_MYSQL_CLIENT=${INSTALL_MYSQL_CLIENT}
             - INSTALL_ZOOKEEPER=${INSTALL_ZOOKEEPER}
             - INSTALL_EXIF=${INSTALL_EXIF}
+            - GITHUB_TOKEN=${GITHUB_TOKEN}
       restart: always
       volumes:
         - ${BASE_DIRECTORY}:/var/www
@@ -32,6 +33,7 @@ services:
           - INSTALL_MYSQL_CLIENT=${INSTALL_MYSQL_CLIENT}
           - INSTALL_ZOOKEEPER=${INSTALL_ZOOKEEPER}
           - INSTALL_EXIF=${INSTALL_EXIF}
+          - GITHUB_TOKEN=${GITHUB_TOKEN}
       restart: always
       volumes:
         - ${BASE_DIRECTORY}:/var/www

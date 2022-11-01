@@ -1,6 +1,4 @@
 ARG PHP_VERSION
-ARG GITHUB_TOKEN
-
 FROM php:${PHP_VERSION}-fpm-alpine
 
 USER root
@@ -145,6 +143,7 @@ WORKDIR /var/www
 RUN chmod -R 777 .
 # Enable projects as safe in git
 RUN git config --global --add safe.directory '*'
-#RUN composer config -g github-oauth.github.com ${GITHUB_TOKEN}
+ARG GITHUB_TOKEN
+RUN composer config -g github-oauth.github.com ${GITHUB_TOKEN}
 EXPOSE 9000
 CMD php-fpm
