@@ -78,6 +78,8 @@ services:
         - MYSQL_ROOT_PASSWORD=root
       volumes:
         - ./mysql/init:/docker-entrypoint-initdb.d
+      restart: always
+      tty: true
       tmpfs: /var/lib/mysql
       expose:
         - "33061"

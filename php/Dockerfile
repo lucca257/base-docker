@@ -3,6 +3,8 @@ ARG GITHUB_TOKEN
 
 FROM php:${PHP_VERSION}-fpm-alpine
 
+USER root
+
 RUN apk --update add wget \
   curl \
   git \
@@ -19,6 +21,28 @@ RUN apk --update add wget \
   libressl-dev \
   supervisor
 
+###########################################################################
+# GD package:
+###########################################################################
+RUN apk add --no-cache \
+      freetype \
+      libjpeg-turbo \
+      libpng \
+      freetype-dev \
+      libjpeg-turbo-dev \
+      libpng-dev \
+    && docker-php-ext-configure gd \
+      --with-freetype=/usr/include/ \
+      --with-jpeg=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-enable gd \
+    && apk del --no-cache \
+      freetype-dev \
+      libjpeg-turbo-dev \
+      libpng-dev \
+    && rm -rf /tmp/*
+# mysqli package:
+###########################################################################
 RUN pecl channel-update pecl.php.net; \
     docker-php-ext-install mysqli mbstring pdo pdo_mysql xml pcntl
 ###########################################################################
@@ -109,8 +133,12 @@ RUN if [ ${INSTALL_EXIF} = true ]; then \
     # Enable Exif PHP extensions requirements
     docker-php-ext-install exif \
 ;fi
+###########################################################################
+# composer:
+###########################################################################
 # php extentions
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+###########################################################################
 # Setup working directory
 WORKDIR /var/www
 # Setup permissions
