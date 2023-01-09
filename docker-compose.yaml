@@ -94,14 +94,18 @@ services:
       container_name: redis
       image: redis:alpine
       user: root
-      volumes:
-        - ./redis/data:/data
+      restart: always
+      tty: true
+#      volumes:
+#        - ./redis/data:/data
       ports:
         - "6379:6379"
 
     zookeeper:
       container_name: zookeeper
       image: confluentinc/cp-zookeeper:latest
+      restart: always
+      tty: true
       environment:
         ZOOKEEPER_CLIENT_PORT: 2181
         ZOOKEEPER_TICK_TIME: 2000
@@ -122,12 +126,14 @@ services:
       restart: always
       depends_on:
         - zookeeper
+      volumes:
+        - ./kafka/data:/kafka-volume
 
     kafdrop:
       container_name: kafdrop
       image: obsidiandynamics/kafdrop:latest
       ports:
-        - "19000:9000"
+        - "1900:9000"
       environment:
         KAFKA_BROKERCONNECT: "kafka:29092"
       restart: always
@@ -153,3 +159,20 @@ services:
       ports:
         - "3000:3000"
       stdin_open: true
+
+#    taskbird-app:
+#      hostname: taskbird-app.test
+#      container_name: taskbird-app
+#      image: node:16-alpine
+#      volumes:
+#        - ${BASE_DIRECTORY}:/app
+#      environment:
+#        - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
+##        - REACT_NATIVE_PACKAGER_HOSTNAME=${LOCAL_IP}
+#      working_dir: /app/${TASKBIRD_APP_DIRECTORY}
+#      command: sh -c "yarn && yarn add global expo-cli && yarn expo start -c   "
+#        - 19000:19000
+#        - 19001:19001
+#        - 19002:19002
+#        - 19006:19006
+#      stdin_open: true

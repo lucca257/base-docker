@@ -19,26 +19,6 @@ RUN apk --update add wget \
   libressl-dev \
   supervisor
 
-###########################################################################
-# GD package:
-###########################################################################
-RUN apk add --no-cache \
-      freetype \
-      libjpeg-turbo \
-      libpng \
-      freetype-dev \
-      libjpeg-turbo-dev \
-      libpng-dev \
-    && docker-php-ext-configure gd \
-      --with-freetype=/usr/include/ \
-      --with-jpeg=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) gd \
-    && docker-php-ext-enable gd \
-    && apk del --no-cache \
-      freetype-dev \
-      libjpeg-turbo-dev \
-      libpng-dev \
-    && rm -rf /tmp/*
 # mysqli package:
 ###########################################################################
 RUN pecl channel-update pecl.php.net; \
@@ -53,16 +33,16 @@ RUN apk add --no-cache \
 ###########################################################################
 # GD package:
 ###########################################################################
-ARG INSTALL_GD=false
-RUN if [ ${INSTALL_GD} = true ]; then \
-    apk add --update --no-cache freetype-dev libjpeg-turbo-dev jpeg-dev libpng-dev; \
-    if [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ] && [ $(php -r "echo PHP_MINOR_VERSION;") = "4" ]; then \
-      docker-php-ext-configure gd --with-freetype --with-jpeg --with-png; \
-    else \
-      docker-php-ext-configure gd --with-freetype-dir=/usr/lib/ --with-jpeg-dir=/usr/lib/ --with-png-dir=/usr/lib/; \
-    fi; \
-    docker-php-ext-install gd \
-;fi
+#    apk add --update --no-cache freetype-dev libjpeg-turbo-dev jpeg-dev libpng-dev; \
+RUN apk add --update \
+		$PHPIZE_DEPS \
+		freetype-dev \
+		libjpeg-turbo-dev \
+		libpng-dev \
+		libxml2-dev \
+		libzip-dev \
+	&& docker-php-ext-configure gd --with-jpeg --with-freetype \
+	&& docker-php-ext-install gd
 ###########################################################################
 # Redis:
 ###########################################################################
