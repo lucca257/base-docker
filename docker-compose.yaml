@@ -160,17 +160,43 @@ services:
         - "3000:3000"
       stdin_open: true
 
+    localstack:
+      container_name: localstack
+      image: localstack/localstack
+      environment:
+        - SERVICES=s3
+        - AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+        - AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+        - AWS_DEFAULT_REGION=us-east-1
+        - AWS_DEFAULT_OUTPUT=json
+        - DEBUG=1 # Debug level 1 if you want to logs, 0 if you want to disable
+        - DATA_DIR=/tmp/localstack/data #  Local directory for saving persistent data(Example: es storage
+        - DEFAULT_REGION=us-east-1
+        - DOCKER_HOST=unix:///var/run/docker.sock
+      ports:
+        - "4566:4566" # s3
+        - "4571:4571"
+        - "8055:8080"
+      volumes:
+        - ./aws/data:/tmp/localstack/data
+        - /var/run/docker.sock:/var/run/docker.sock
+        - /etc/localstack/init/ready.d/init-aws.sh'
+        - ./aws/docker-entrypoint.sh:/docker-entrypoint-initaws.d/docker-entrypoint.sh
+        - ./aws/s3:/root/localstack/s3
+
 #    taskbird-app:
 #      hostname: taskbird-app.test
 #      container_name: taskbird-app
 #      image: node:16-alpine
+#      user: root
 #      volumes:
-#        - ${BASE_DIRECTORY}:/app
+#        - ${BASE_DIRECTORY}:/var/www
+#      working_dir: /var/www/${TASKBIRD_APP_DIRECTORY}
 #      environment:
 #        - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
-##        - REACT_NATIVE_PACKAGER_HOSTNAME=${LOCAL_IP}
-#      working_dir: /app/${TASKBIRD_APP_DIRECTORY}
-#      command: sh -c "yarn && yarn add global expo-cli && yarn expo start -c   "
+#        - REACT_NATIVE_PACKAGER_HOSTNAME=${LOCAL_IP}
+##      command: sh -c "yarn && yarn add global expo-cli && yarn start -c"
+#      command: sh -c "sleep infinity"
 #        - 19000:19000
 #        - 19001:19001
 #        - 19002:19002
