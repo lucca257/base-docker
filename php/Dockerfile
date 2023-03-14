@@ -104,12 +104,28 @@ RUN set -eux; \
     php -m | grep -q 'zookeeper'; \
     fi
 ###########################################################################
-# Exif:
+# Exif: Enable Exif PHP extensions requirements
 ###########################################################################
 ARG INSTALL_EXIF=false
 RUN if [ ${INSTALL_EXIF} = true ]; then \
-    # Enable Exif PHP extensions requirements
     docker-php-ext-install exif \
+;fi
+###########################################################################
+# Human Language and Character Encoding Support:
+###########################################################################
+ARG INSTALL_INTL=false
+RUN if [ ${INSTALL_INTL} = true ]; then \
+    apk add icu-dev \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install intl \
+;fi
+###########################################################################
+# bcmath:
+###########################################################################
+ARG INSTALL_BCMATH=false
+RUN if [ ${INSTALL_BCMATH} = true ]; then \
+    # Install the bcmath extension
+    docker-php-ext-install bcmath \
 ;fi
 ###########################################################################
 # composer:

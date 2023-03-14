@@ -14,9 +14,12 @@ services:
             - INSTALL_ZOOKEEPER=${INSTALL_ZOOKEEPER}
             - INSTALL_EXIF=${INSTALL_EXIF}
             - GITHUB_TOKEN=${GITHUB_TOKEN}
+            - INSTALL_INTL=true
+            - INSTALL_BCMATH=true
       restart: always
       volumes:
         - ${BASE_DIRECTORY}:/var/www
+        - ./php/config/custom.ini:/usr/local/etc/php/conf.d/custom.ini
       depends_on:
         - mysql
 
@@ -37,6 +40,7 @@ services:
       restart: always
       volumes:
         - ${BASE_DIRECTORY}:/var/www
+        - ./php/config/custom.ini:/usr/local/etc/php/conf.d/custom.ini
       depends_on:
         - mysql
 
